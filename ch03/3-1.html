@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div class="todo">
+    <h3>할 일 목록</h3>
+    <ul class="list"></ul>
+    <input class="desc" type="text" />
+    <button onclick="onAdd()">추가</button>
+    <button onclick="onSaveToServer()">서버에 저장</button>
+  </div>
+
+  <script>
+    let currentId = 1;
+    const todoList = [];
+    function onAdd() {
+      const inputEl = document.querySelector('.todo .desc');
+      const todo = { id : currentId, desc : inputEl.value };
+      todoList.push(todo);
+      currentId +=1 ;
+
+      const elemList = document.querySelector('.todo .list');
+      const liEl = makeTodoElement(todo);
+      elemList.appendChild(liEl);
+    }
+    function makeTodoElement(todo) {
+      const liEl = document.createElement('li');
+      const spanEl = document.createElement('span');
+      const buttonpEl = document.createElement('button');
+      spanEl.innerHTML = todo.desc;
+      buttonpEl.innerHTML = '삭제';
+      buttonpEl.dataset.id = todo.id;
+      buttonpEl.onclick = onDelete;
+      liEl.appendChild(spanEl);
+      liEl.appendChild(buttonpEl);
+      return liEl;
+    }
+    function onDelete(e) {
+      const id = Number(e.target.dataset.id);
+      const index = todoList.findIndex(item => item.id === id);
+      if(index >= 0) {
+        todoList.slice(index, 1);
+        const elemList = document.querySelector('.todo .list');
+        const liEl = e.target.parentNode;
+        elemList.removeChild(liEl);
+      }
+    }
+    function onSaveToServer() {
+      alert('전송');
+    }
+  </script>
+</body>
+</html>

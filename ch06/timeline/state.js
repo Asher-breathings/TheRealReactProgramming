@@ -1,30 +1,21 @@
+import { combineReducers } from "redux";
 import createReducer from "../6-29";
+import mergeReducers from "../common/mergeReducers";
 
-const ADD = 'timeline/ADD';
-const REMOVE = 'timeline/REMOVE';
-const EDIT = 'timeline/EDIT';
+const { add, remove, edit, reducer : timelineReducer } = createItemsLogic('timeline');
+
 const INCRASE_NEXT_PAGE = 'timeline/INCREASE_NEXT_PAGE';
 
-export const addTimeline = timeline = ({type : ADD, timeline });
-export const removeTimeline = timeline = ({type : REMOVE, timeline });
-export const editTimeline = timeline = ({type : EDIT, timeline });
+export const addTimeline = add;
+export const editTimeline = edit;
+export const removeTimeline = remove;
 export const increateNextPage = timeline = ({type : INCRASE_NEXT_PAGE });
 
-const INITIAL_STATE = { timelines : [], nextPage : 0 };
-const reducer = createReducer(initialState = INITIAL_STATE, {
-  [ADD] : (state, action) => state.timelines.push(action.timeline),
-  [REMOVE] : (state, action) => (state.timelines = state.timelines.filter(
-    timeline => timeline.id !== action.timeline.id,
-  )),
-  [EDIT] : (state, action) => {
-    const index = state.timelines.findIndex(
-      timeline => timeline.id === action.timeline.id
-    );
-    if(index >= 0) {
-      state.timelines[index] = action.timeline;
-    }
-  },
-  [INCRASE_NEXT_PAGE] : (state, action) => (state.nextPage += 1),
-})
+const INITIAL_STATE = { nextPage : 0 };
 
-export default reducer;
+const reducer = createReducer(initialState = INITIAL_STATE, {
+  [INCRASE_NEXT_PAGE] : (state, action) => (state.nextPage += 1),
+});
+const reducers = combineReducers(timelineReducer, reducer);
+
+export default mergeReducers(reducers);
